@@ -182,6 +182,7 @@ fun LogTransaksiScreen(
 
     fun isTabAllowed(index: Int): Boolean {
         if (!userRole.contains("siswa", ignoreCase = true)) return true
+        if (!viewModel.isStudentPermissionGranted("log_transaksi")) return false
         val key = when(index) {
             0 -> "log_sirkulasi"
             1 -> "log_bahan_habis"
@@ -190,7 +191,7 @@ fun LogTransaksiScreen(
             4 -> "log_aktivitas"
             else -> "log_sirkulasi"
         }
-        return studentPermissions[key] == true
+        return viewModel.isStudentPermissionGranted(key)
     }
 
     // 5 Categories Tier 1 Tab State

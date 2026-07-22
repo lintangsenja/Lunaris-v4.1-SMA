@@ -100,8 +100,23 @@ fun AlatRusakScreen(
 
     var showQrScanner by remember { mutableStateOf(false) }
 
+    val userRole by viewModel.userRole.collectAsState()
+    val canSubmitPermission = viewModel.isStudentPermissionGranted("alat_rusak_submit")
+    val canView = viewModel.isStudentPermissionGranted("alat_rusak_view")
+    val canAccessAlatRusak = viewModel.isStudentPermissionGranted("alat_rusak") && (canSubmitPermission || canView)
+
     // Tab state
     var selectedTabState by remember { mutableStateOf(0) }
+
+    LaunchedEffect(userRole, canSubmitPermission, canView) {
+        if (userRole.contains("siswa", ignoreCase = true)) {
+            if (!canSubmitPermission && canView) {
+                selectedTabState = 1
+            } else if (canSubmitPermission && !canView) {
+                selectedTabState = 0
+            }
+        }
+    }
 
     // Form inputs
     var alatSearchQuery by remember { mutableStateOf("") }

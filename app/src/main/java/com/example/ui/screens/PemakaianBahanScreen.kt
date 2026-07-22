@@ -85,7 +85,22 @@ fun PemakaianBahanScreen(
     val appBarContentColor = if (isDark) MaterialTheme.colorScheme.onSurface else DeepPurpleText
     val dividerColor = MaterialTheme.colorScheme.outlineVariant
 
+    val userRole by viewModel.userRole.collectAsState()
+    val canForm = viewModel.isStudentPermissionGranted("pemakaian_bahan_form")
+    val canLog = viewModel.isStudentPermissionGranted("pemakaian_bahan_log")
+    val canAccessPemakaian = viewModel.isStudentPermissionGranted("pemakaian_bahan") && (canForm || canLog)
+
     var selectedTab by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(userRole, canForm, canLog) {
+        if (userRole.contains("siswa", ignoreCase = true)) {
+            if (!canForm && canLog) {
+                selectedTab = 1
+            } else if (canForm && !canLog) {
+                selectedTab = 0
+            }
+        }
+    }
 
     val allItems by viewModel.itemsWithStock.collectAsState()
     val logistikItems = remember(allItems) {

@@ -136,6 +136,7 @@ fun LaporanScreen(
 
     fun isTabAllowed(index: Int): Boolean {
         if (!userRole.contains("siswa", ignoreCase = true)) return true
+        if (!viewModel.isStudentPermissionGranted("laporan")) return false
         val key = when(index) {
             0 -> "laporan_ringkasan"
             1 -> "laporan_alat"
@@ -147,11 +148,11 @@ fun LaporanScreen(
             7 -> "laporan_pemeliharaan"
             else -> "laporan_ringkasan"
         }
-        return (studentPermissions[key] == true) || (studentPermissions["laporan"] == true)
+        return viewModel.isStudentPermissionGranted(key)
     }
 
-    val canExportExcel = !userRole.contains("siswa", ignoreCase = true) || (studentPermissions["laporan_export_excel"] == true) || (studentPermissions["laporan"] == true)
-    val canPrintPdf = !userRole.contains("siswa", ignoreCase = true) || (studentPermissions["laporan_print_pdf"] == true) || (studentPermissions["laporan"] == true)
+    val canExportExcel = !userRole.contains("siswa", ignoreCase = true) || viewModel.isStudentPermissionGranted("laporan_export_excel")
+    val canPrintPdf = !userRole.contains("siswa", ignoreCase = true) || viewModel.isStudentPermissionGranted("laporan_print_pdf")
 
     LaunchedEffect(userRole, studentPermissions) {
         if (userRole.contains("siswa", ignoreCase = true) && !isTabAllowed(selectedTabState)) {

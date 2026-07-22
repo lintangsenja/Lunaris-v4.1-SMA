@@ -151,6 +151,39 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         saveStudentPermissionsToFirestore(updated)
     }
 
+    fun isStudentPermissionGranted(permissionKey: String): Boolean {
+        if (!_userRole.value.contains("siswa", ignoreCase = true)) return true
+        val permissions = _studentPermissions.value
+
+        val parentKey = when {
+            permissionKey.startsWith("peminjaman_") || permissionKey == "peminjaman" -> "peminjaman"
+            permissionKey.startsWith("pengembalian_") || permissionKey == "pengembalian" -> "pengembalian"
+            permissionKey == "scan_qr" || permissionKey == "generate_qr" || permissionKey == "qr_group" -> "qr_group"
+            permissionKey.startsWith("log_") || permissionKey == "log_transaksi" -> "log_transaksi"
+            permissionKey.startsWith("alat_rusak_") || permissionKey == "alat_rusak" -> "alat_rusak"
+            permissionKey.startsWith("alat_") || permissionKey == "alat" -> "alat"
+            permissionKey.startsWith("kondisi_alat_") || permissionKey == "kondisi_alat" -> "kondisi_alat"
+            permissionKey.startsWith("pemeliharaan_") || permissionKey == "pemeliharaan" -> "pemeliharaan"
+            permissionKey.startsWith("bahan_afkir_") || permissionKey == "bahan_afkir" -> "bahan_afkir"
+            permissionKey.startsWith("bahan_") || permissionKey == "bahan" -> "bahan"
+            permissionKey.startsWith("pemakaian_bahan_") || permissionKey == "pemakaian_bahan" -> "pemakaian_bahan"
+            permissionKey.startsWith("master_data_") || permissionKey == "master_data" -> "master_data"
+            permissionKey.startsWith("stok_opname_") || permissionKey == "stok_opname" -> "stok_opname"
+            permissionKey.startsWith("laporan_") || permissionKey == "laporan" -> "laporan"
+            else -> null
+        }
+
+        if (parentKey != null && permissions[parentKey] != true) {
+            return false
+        }
+
+        if (permissionKey == parentKey) {
+            return permissions[parentKey] == true
+        }
+
+        return permissions[permissionKey] == true
+    }
+
     fun resetStudentPermissionsToDefault() {
         val defaults = mapOf(
             "peminjaman" to false,

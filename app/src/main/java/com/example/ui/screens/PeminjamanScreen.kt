@@ -116,7 +116,7 @@ fun PeminjamanScreen(
     val studentPermissions by viewModel.studentPermissions.collectAsState()
     val defaultOfficerState by viewModel.defaultOfficer.collectAsState()
 
-    val canUseForm = if (userRole.contains("siswa", ignoreCase = true)) (studentPermissions["peminjaman_form"] == true) else true
+    val canUseForm = viewModel.isStudentPermissionGranted("peminjaman_form")
 
     val isDark = false
     val topBarGradient = if (isDark) {

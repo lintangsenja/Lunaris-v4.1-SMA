@@ -91,8 +91,23 @@ fun BahanAfkirScreen(
 
     var showQrScanner by remember { mutableStateOf(false) }
 
+    val userRole by viewModel.userRole.collectAsState()
+    val canSubmitPermission = viewModel.isStudentPermissionGranted("bahan_afkir_submit")
+    val canView = viewModel.isStudentPermissionGranted("bahan_afkir_view")
+    val canAccessAfkir = viewModel.isStudentPermissionGranted("bahan_afkir") && (canSubmitPermission || canView)
+
     // Tab state
     var selectedTabState by remember { mutableStateOf(0) }
+
+    LaunchedEffect(userRole, canSubmitPermission, canView) {
+        if (userRole.contains("siswa", ignoreCase = true)) {
+            if (!canSubmitPermission && canView) {
+                selectedTabState = 1
+            } else if (canSubmitPermission && !canView) {
+                selectedTabState = 0
+            }
+        }
+    }
 
     // Form inputs
     var bahanSearchQuery by remember { mutableStateOf("") }

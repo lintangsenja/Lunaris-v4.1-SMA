@@ -82,8 +82,23 @@ fun PemeliharaanScreen(
 
     var showQrScanner by remember { mutableStateOf(false) }
 
+    val userRole by viewModel.userRole.collectAsState()
+    val canTambah = viewModel.isStudentPermissionGranted("pemeliharaan_tambah")
+    val canView = viewModel.isStudentPermissionGranted("pemeliharaan_view")
+    val canAccessPemeliharaan = viewModel.isStudentPermissionGranted("pemeliharaan") && (canTambah || canView)
+
     // Tab state
     var selectedTabState by remember { mutableStateOf(0) }
+
+    LaunchedEffect(userRole, canTambah, canView) {
+        if (userRole.contains("siswa", ignoreCase = true)) {
+            if (!canTambah && canView) {
+                selectedTabState = 1
+            } else if (canTambah && !canView) {
+                selectedTabState = 0
+            }
+        }
+    }
 
     // Form inputs
     var alatSearchQuery by remember { mutableStateOf("") }
