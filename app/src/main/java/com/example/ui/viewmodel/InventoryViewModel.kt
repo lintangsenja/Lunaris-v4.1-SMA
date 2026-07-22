@@ -155,30 +155,19 @@ class InventoryViewModel(application: Application) : AndroidViewModel(applicatio
         if (!_userRole.value.contains("siswa", ignoreCase = true)) return true
         val permissions = _studentPermissions.value
 
-        val parentKey = when {
-            permissionKey.startsWith("peminjaman_") || permissionKey == "peminjaman" -> "peminjaman"
-            permissionKey.startsWith("pengembalian_") || permissionKey == "pengembalian" -> "pengembalian"
-            permissionKey == "scan_qr" || permissionKey == "generate_qr" || permissionKey == "qr_group" -> "qr_group"
-            permissionKey.startsWith("log_") || permissionKey == "log_transaksi" -> "log_transaksi"
-            permissionKey.startsWith("alat_rusak_") || permissionKey == "alat_rusak" -> "alat_rusak"
-            permissionKey.startsWith("alat_") || permissionKey == "alat" -> "alat"
-            permissionKey.startsWith("kondisi_alat_") || permissionKey == "kondisi_alat" -> "kondisi_alat"
-            permissionKey.startsWith("pemeliharaan_") || permissionKey == "pemeliharaan" -> "pemeliharaan"
-            permissionKey.startsWith("bahan_afkir_") || permissionKey == "bahan_afkir" -> "bahan_afkir"
-            permissionKey.startsWith("bahan_") || permissionKey == "bahan" -> "bahan"
-            permissionKey.startsWith("pemakaian_bahan_") || permissionKey == "pemakaian_bahan" -> "pemakaian_bahan"
-            permissionKey.startsWith("master_data_") || permissionKey == "master_data" -> "master_data"
-            permissionKey.startsWith("stok_opname_") || permissionKey == "stok_opname" -> "stok_opname"
-            permissionKey.startsWith("laporan_") || permissionKey == "laporan" -> "laporan"
-            else -> null
-        }
+        val parentKeys = setOf(
+            "peminjaman", "pengembalian", "qr_group", "log_transaksi",
+            "alat", "kondisi_alat", "alat_rusak", "pemeliharaan",
+            "bahan", "pemakaian_bahan", "bahan_afkir", "master_data",
+            "stok_opname", "laporan"
+        )
 
-        if (parentKey != null && permissions[parentKey] != true) {
-            return false
-        }
-
-        if (permissionKey == parentKey) {
-            return permissions[parentKey] == true
+        if (permissionKey in parentKeys) {
+            if (permissions[permissionKey] == true) return true
+            val prefix = if (permissionKey == "qr_group") "scan_qr" else "${permissionKey}_"
+            return permissions.entries.any { (k, v) ->
+                v == true && (k.startsWith(prefix) || (permissionKey == "qr_group" && (k == "scan_qr" || k == "generate_qr")))
+            }
         }
 
         return permissions[permissionKey] == true

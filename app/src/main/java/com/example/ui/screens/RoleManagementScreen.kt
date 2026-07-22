@@ -661,16 +661,27 @@ fun RoleManagementScreen(
                                                                 modifier = Modifier
                                                                     .clip(RoundedCornerShape(4.dp))
                                                                     .background(
-                                                                        if (isSubChecked) Color(0xFFDCFCE7) else Color(0xFFF3F4F6)
+                                                                        if (isSubChecked) Color(0xFFDCFCE7) else Color(0xFFFEE2E2)
                                                                     )
                                                                     .padding(horizontal = 5.dp, vertical = 1.dp)
                                                             ) {
-                                                                Text(
-                                                                    text = if (isSubChecked) "Aktif" else "Mati",
-                                                                    fontSize = 8.sp,
-                                                                    fontWeight = FontWeight.Bold,
-                                                                    color = if (isSubChecked) Color(0xFF15803D) else Color(0xFF6B7280)
-                                                                )
+                                                                Row(
+                                                                    verticalAlignment = Alignment.CenterVertically,
+                                                                    horizontalArrangement = Arrangement.spacedBy(3.dp)
+                                                                ) {
+                                                                    Icon(
+                                                                        imageVector = if (isSubChecked) Icons.Default.CheckCircle else Icons.Default.Lock,
+                                                                        contentDescription = null,
+                                                                        tint = if (isSubChecked) Color(0xFF15803D) else Color(0xFFDC2626),
+                                                                        modifier = Modifier.size(10.dp)
+                                                                    )
+                                                                    Text(
+                                                                        text = if (isSubChecked) "Aktif" else "Terkunci",
+                                                                        fontSize = 8.sp,
+                                                                        fontWeight = FontWeight.Bold,
+                                                                        color = if (isSubChecked) Color(0xFF15803D) else Color(0xFFDC2626)
+                                                                    )
+                                                                }
                                                             }
                                                         }
                                                         Spacer(modifier = Modifier.height(2.dp))

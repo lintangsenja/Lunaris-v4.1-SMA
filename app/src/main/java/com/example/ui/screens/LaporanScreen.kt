@@ -730,9 +730,9 @@ fun LaporanScreen(
                         modifier = Modifier.weight(1f).testTag("btn_export_csv_v")
                     ) {
                         Icon(
-                            Icons.Default.TableChart,
+                            imageVector = if (!canExportExcel) Icons.Default.Lock else Icons.Default.TableChart,
                             contentDescription = null,
-                            tint = if (!canExportExcel) Color.Gray else if (isDark) MaterialTheme.colorScheme.primary else DeepPurpleText,
+                            tint = if (!canExportExcel) Color(0xFFEF4444) else if (isDark) MaterialTheme.colorScheme.primary else DeepPurpleText,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -763,9 +763,9 @@ fun LaporanScreen(
                         modifier = Modifier.weight(1f).testTag("btn_export_excel")
                     ) {
                         Icon(
-                            Icons.Default.Description,
+                            imageVector = if (!canExportExcel) Icons.Default.Lock else Icons.Default.Description,
                             contentDescription = null,
-                            tint = if (!canExportExcel) Color.Gray else if (isDark) MaterialTheme.colorScheme.primary else DeepPurpleText,
+                            tint = if (!canExportExcel) Color(0xFFEF4444) else if (isDark) MaterialTheme.colorScheme.primary else DeepPurpleText,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -792,8 +792,9 @@ fun LaporanScreen(
                         modifier = Modifier.weight(1f).testTag("btn_export_pdf")
                     ) {
                         Icon(
-                            Icons.Default.PictureAsPdf,
+                            imageVector = if (!canPrintPdf) Icons.Default.Lock else Icons.Default.PictureAsPdf,
                             contentDescription = null,
+                            tint = if (!canPrintPdf) Color(0xFFEF4444) else if (isDark) MaterialTheme.colorScheme.onPrimary else Color.White,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
